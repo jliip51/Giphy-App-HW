@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en-us">
+
 <head>
 	<meta charset="UTF-8">
 	<title>Giphy App</title>
@@ -8,30 +9,30 @@
 	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
 	<link rel="stylesheet" type="text/css" href="assets/css/style.css">
 </head>
+
 <body>
 	<div class="container-fluid">
 
-	<div class="row" id="btn-div">
-		<!-- Buttons div -->
-	</div>
-
-	<div class="row">
-
-		<div class="col-xs-12 col-sm-9" id="results">
-		  <!-- Results div -->
+		<div class="row" id="btn-div">
+			<!-- Buttons div -->
 		</div>
 
-		<div class="col-xs-12 col-sm-3">
+		<div class="row">
 
-		 	<label for="searchInput">Search Sports</label>
+			<div class="col-xs-12 col-sm-9">
+				<h3 id="gifHeading"></h3>
+				<div id="results"></div>
+			</div>
 
-		 	<input type="text" class="form-control" id="searchInput" placeholder="Type of Sport">
-
-		 	<button type="submit" class="btn btn-primary margin-top" id="create-btn">Submit</button>
+			<div class="col-xs-12 col-sm-3">
+				<form id="form-div">
+					<label for="searchInput">Add any topic</label>
+					<input type="text" class="form-control" id="searchInput" placeholder="Things to fail">
+					<button type="submit" class="btn btn-primary btn-lg submit-btn" id="create-btn">Create Button</button>
+				</form>
+			</div>
 
 		</div>
-
-	</div>
 
 	</div>
 
@@ -41,4 +42,5 @@
 
 
 </body>
+
 </html>

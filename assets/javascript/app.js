@@ -1,67 +1,84 @@
-var subject = ["football", "basketball", "ultimate frisbee", "volleyball", "tug o war"];
-var searchQuery;
+var subject = ['walking', 'dance', 'biking', 'racing', 'football', 'basketball', 'golf', 'skating',
+              'volleyball', 'baseball', 'sledding', 'sailing', 'gymnastics', 'soccer', 'skiing', 'surfing'];
+var searchQuery = '';
+var limitCount = 10;
 
-	$("#create-btn").on("click", function() {
-		var userInput = $("#searchInput").val().trim();
+$('#create-btn').on('click', function(event) {
+  event.preventDefault();
+  var userInput = $('#searchInput').val().trim();
 
-		if (userInput == "") {
-			alert("Type request in search box then press submit button to create new button")
-		} else {
-			$("#searchInput").val('');
-			subject.push(userInput);
-			drawButtons();
+  if (userInput == '') {
+    alert('Type request in search box then press submit button to create new button');
+  } else {
+    $('#searchInput').val('');
+    subject.push(userInput);
+    drawButtons();
+  }
+});
 
-		  }
-	});
+function drawButtons() {
+  $('#btn-div').empty();
 
-	function drawButtons() {
-		$("#btn-div").empty();
+  for (var i = 0; i < subject.length; i++) {
+    var button = $('<button>');
+    button.addClass('btn btn-primary btn-lg gif-btn');
+    button.attr('data-topic', subject[i]);
+    button.text(subject[i]);
+    $('#btn-div').append(button);
+  }
+};
 
-		for (var i = 0; i < subject.length; i++) {
-			var button = $("<button>");
-			button.addClass("btn btn-primary btn-view");
-			button.attr("data-topic", subject[i]);
-			button.text(subject[i]);
-			$("#btn-div").append(button);
-		}
-	};
+$(document).on('click', '.gif-btn', function() {
+  var term = $(this).attr('data-topic');
+  searchQuery = term.split(' ').join('+');
+  $('#gifHeading').html(term.toUpperCase() + ' FAIL');
+  populateGifs();
+});
 
-	$(document).on("click", ".btn-view", function() {
-	var term = $(this).attr("data-topic");
-	console.log(term);
-	searchQuery = term.split(" ").join("+");
-	populateGifs();
-	console.log(searchQuery);
+function populateGifs() {
 
-	});
+  var queryURL = 'https://api.giphy.com/v1/gifs/search?q=' + searchQuery + '+fail&api_key=dc6zaTOxFJmzC&limit=' + limitCount;
 
-	function populateGifs() {
+  $.ajax({
+      url: queryURL,
+      method: 'GET',
+    })
+    .done(function(response) {
 
-		// var queryURL = "https://api.giphy.com/v1/gifs/random?&api_key=dc6zaTOxFJmzC";
-		var queryURL = "https://api.giphy.com/v1/gifs/search?q=" + searchQuery + "&api_key=dc6zaTOxFJmzC&limit=10";
+      console.log(response);
+      console.log(queryURL);
 
-		$.ajax({url: queryURL, method: "GET"})
-		.done(function(response){
+      $('#results').empty();
 
-			console.log(response);
-			console.log(queryURL);
+      var results = response.data;
 
-			$("#results").empty();
+      for (var i = 0; i < results.length; i++) {
 
-			var results = response.data;
+        var staticUrl = results[i].images.fixed_height_still.url;
+        var animateUrl = results[i].images.fixed_height.url;
+        var gifDiv = $('<div class="gif-div">');
+        var rating = $('<p class="rating">').text("Rating: " + results[i].rating);
+        var fieldImage = $('<img>').attr('data-state', 'still');
+        fieldImage.addClass('gif-img');
+        fieldImage.attr({'src': staticUrl, 'data-state': 'still', 'data-still': staticUrl,
+          'data-animate': animateUrl, 'alt': searchQuery});
+        gifDiv.append(rating);
+        gifDiv.append(fieldImage);
+        $('#results').append(gifDiv);
+      }
+    });
+};
 
-			for (var i = 0; i < results.length; i++) {
-
-		       	var imageUrl = results[i].images.fixed_height.url;
-		        var fieldImage = $("<img>");
-		       	fieldImage.attr("src", imageUrl);
-		        fieldImage.attr("alt", );
-		        $("#results").prepend(fieldImage);
-
-	    	}
-
-		});
-
-	};
-
+$(document).on('click', '.gif-img', function() {
+  var state = $(this).attr('data-state');
+  if (state === 'still') {
+    $(this).attr('src', $(this).attr('data-animate'));
+    $(this).attr('data-state', 'animate');
+    $(this).css('opacity', '1.0');
+  } else {
+    $(this).attr('src', $(this).attr('data-still'));
+    $(this).attr('data-state', 'still');
+    $(this).css('opacity', '0.5');
+  }
+});
 drawButtons();
